@@ -22,13 +22,10 @@ import {
   Camera,
   Upload,
   User,
-  Image as ImageIcon,
-  MapPin,
-  Navigation
+  Image as ImageIcon
 } from 'lucide-react';
 import { SalesRepresentative, CustomerList, Language } from '../types';
 import { ActionMenu } from './ActionMenu';
-import { RepLocationModal } from './RepLocationModal';
 import { hasDuplicateName, deduplicateEntitiesByName } from '../lib/nameHelpers';
 
 interface RepsManagementModalProps {
@@ -73,13 +70,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
   const [allowedListIds, setAllowedListIds] = useState<string[]>(['all']);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [isProcessingImage, setIsProcessingImage] = useState(false);
-
-  // Representative Location States
-  const [repLatitude, setRepLatitude] = useState<number | undefined>(undefined);
-  const [repLongitude, setRepLongitude] = useState<number | undefined>(undefined);
-  const [repAddress, setRepAddress] = useState<string>('');
-  const [locationModalRep, setLocationModalRep] = useState<SalesRepresentative | null>(null);
-  const [isGettingGps, setIsGettingGps] = useState(false);
 
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -154,42 +144,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
     }
   };
 
-  const handleGetGpsLocation = () => {
-    if (!navigator.geolocation) {
-      setError(isAr ? 'متصفحك لا يدعم نظام تحديد المواقع GPS' : 'Geolocation is not supported by your browser');
-      return;
-    }
-    setIsGettingGps(true);
-    setError('');
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        setRepLatitude(lat);
-        setRepLongitude(lng);
-        setIsGettingGps(false);
-        showModalToast(isAr ? 'تم تحديد الإحداثيات بنجاح!' : 'GPS coordinates retrieved!');
-        
-        try {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBRW3e45-1MK7jySdSQChQOm31enB5p8Wc&language=ar`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.results && data.results[0]) {
-              setRepAddress(data.results[0].formatted_address);
-            }
-          }
-        } catch (e) {
-          // ignore geocode error
-        }
-      },
-      (err) => {
-        setIsGettingGps(false);
-        setError(isAr ? 'فشل جلب موقع الـ GPS، يرجى السماح بالوصول للموقع في جهازك' : 'Failed to retrieve GPS location');
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  };
-
   // Deduplicate reps list for display
   const uniqueReps = React.useMemo(() => {
     return deduplicateEntitiesByName(reps);
@@ -210,9 +164,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
       setCanSell(rep.canSell !== false);
       setAllowedListIds(rep.allowedListIds || ['all']);
       setAvatarUrl(rep.avatarUrl || '');
-      setRepLatitude(rep.latitude);
-      setRepLongitude(rep.longitude);
-      setRepAddress(rep.address || '');
     } else {
       setEditingRep(null);
       setName('');
@@ -225,9 +176,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
       setCanSell(true);
       setAllowedListIds(['all']);
       setAvatarUrl('');
-      setRepLatitude(undefined);
-      setRepLongitude(undefined);
-      setRepAddress('');
     }
     setError('');
     setIsAddFormOpen(true);
@@ -259,9 +207,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
           canSell,
           allowedListIds,
           avatarUrl,
-          latitude: repLatitude,
-          longitude: repLongitude,
-          address: repAddress.trim(),
         });
       } else {
         await onAddRep({
@@ -275,9 +220,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
           canSell,
           allowedListIds,
           avatarUrl,
-          latitude: repLatitude,
-          longitude: repLongitude,
-          address: repAddress.trim(),
         });
       }
       setIsAddFormOpen(false);
@@ -490,16 +432,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
 
                       {/* Rep Card Actions */}
                       <div className="flex items-center gap-2 flex-wrap border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-200 dark:border-slate-700/60">
-                        <button
-                          type="button"
-                          onClick={() => setLocationModalRep(rep)}
-                          className="px-2.5 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/60 hover:bg-teal-100 dark:hover:bg-teal-900 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 text-xs font-black flex items-center gap-1 transition-all cursor-pointer shadow-2xs"
-                          title={isAr ? 'عرض وتحديث موقع المندوب على الخريطة' : 'View or update location'}
-                        >
-                          <MapPin className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
-                          <span>{isAr ? 'الموقع' : 'Location'}</span>
-                        </button>
-
                         {!isActive && (
                           <button
                             type="button"
@@ -691,89 +623,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
                 </select>
               </div>
 
-              {/* Location Section */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/80 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-black text-xs text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                    <span className="p-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 rounded-lg">📍</span>
-                    <span>{isAr ? 'الموقع الجغرافي للمندوب' : 'Representative Location'}</span>
-                  </h4>
-                  <button
-                    type="button"
-                    onClick={handleGetGpsLocation}
-                    disabled={isGettingGps}
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black flex items-center gap-1 shadow-xs transition-all active:scale-95 disabled:opacity-50"
-                  >
-                    <span>{isGettingGps ? 'جاري التحديد...' : (isAr ? '📍 تحديد موقعي الحالي' : 'Get GPS Location')}</span>
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 text-[11px]">
-                    {isAr ? 'العنوان أو الملاحظة الجغرافية' : 'Address / Note'}
-                  </label>
-                  <input
-                    type="text"
-                    value={repAddress}
-                    onChange={(e) => setRepAddress(e.target.value)}
-                    placeholder={isAr ? 'مثال: بغداد، حي الكرادة أو اضغط زر التحديد' : 'e.g. Baghdad, Karada'}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block font-bold text-slate-500 mb-1 text-[10px]">
-                      {isAr ? 'خط العرض (Latitude)' : 'Latitude'}
-                    </label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={repLatitude !== undefined ? repLatitude : ''}
-                      onChange={(e) => setRepLatitude(e.target.value ? parseFloat(e.target.value) : undefined)}
-                      placeholder="33.315"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white dark:bg-slate-900 text-[11px] font-mono dir-ltr text-right"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-500 mb-1 text-[10px]">
-                      {isAr ? 'خط الطول (Longitude)' : 'Longitude'}
-                    </label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={repLongitude !== undefined ? repLongitude : ''}
-                      onChange={(e) => setRepLongitude(e.target.value ? parseFloat(e.target.value) : undefined)}
-                      placeholder="44.361"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white dark:bg-slate-900 text-[11px] font-mono dir-ltr text-right"
-                    />
-                  </div>
-                </div>
-
-                {repLatitude !== undefined && repLongitude !== undefined && (
-                  <div className="space-y-1">
-                    <div className="rounded-xl overflow-hidden border border-slate-200 shadow-inner max-h-48 relative">
-                      <img
-                        src={`https://maps.googleapis.com/maps/api/staticmap?center=${repLatitude},${repLongitude}&zoom=14&size=400x180&markers=color:red%7C${repLatitude},${repLongitude}&key=AIzaSyBRW3e45-1MK7jySdSQChQOm31enB5p8Wc`}
-                        alt="Representative Location"
-                        className="w-full h-auto object-cover"
-                      />
-                    </div>
-                    <div className="flex justify-end">
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${repLatitude},${repLongitude}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-indigo-600 font-black hover:underline"
-                      >
-                        {isAr ? '↗️ فتح في خرائط جوجل التفاعلية' : 'Open in Google Maps'}
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-
               {/* Permissions Checkbox Toggles Section */}
               <div className="p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/80 space-y-3">
                 <h4 className="font-black text-xs text-indigo-900 dark:text-indigo-200">
@@ -930,15 +779,6 @@ export const RepsManagementModal: React.FC<RepsManagementModalProps> = ({
           )}
         </div>
       </div>
-
-      {/* Representative Google Maps Location Modal */}
-      <RepLocationModal
-        isOpen={!!locationModalRep}
-        onClose={() => setLocationModalRep(null)}
-        rep={locationModalRep}
-        onUpdateRep={onUpdateRep}
-        lang={lang}
-      />
     </div>
   );
 };
