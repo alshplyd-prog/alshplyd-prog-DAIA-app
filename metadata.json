@@ -1,0 +1,6 @@
+{
+  "name": "Daily Installment Sales",
+  "description": "نظام إدارة مبيعات وتحصيل الأقساط اليومية مع المزامنة الحية وتنبيهات المتأخرين",
+  "requestFramePermissions": ["bluetooth"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
