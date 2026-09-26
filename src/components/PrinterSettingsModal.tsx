@@ -54,7 +54,7 @@ import {
   requestDisplayOverAppsPermission,
   openBatteryOptimizationSettings,
   openAutoStartSettings,
-} from '../lib/offlineQueue';
+} from '../lib/offlineQueue.ts';
 import { checkServerHealth } from '../lib/apiConfig';
 import { forceRefreshAllDataFromPostgres, reconcileAllLocalWithDatabase } from '../lib/postgresClient';
 

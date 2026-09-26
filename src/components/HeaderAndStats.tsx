@@ -45,7 +45,7 @@ import { Language, InstallmentContract, PaymentRecord, ActiveTab, SalesRepresent
 import { DEFAULT_REPS } from '../data/initialContracts';
 import { getLocalDateString, isSameCalendarDate } from '../lib/dateUtils';
 import { reconcileAllLocalWithDatabase } from '../lib/postgresClient';
-import { requestAllBackgroundAndSyncPermissions } from '../lib/offlineQueue';
+import { requestAllBackgroundAndSyncPermissions } from '../lib/offlineQueue.ts';
 
 interface AppNotificationItem {
   id: string;

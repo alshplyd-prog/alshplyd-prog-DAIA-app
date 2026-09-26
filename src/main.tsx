@@ -2,7 +2,7 @@ import React, { StrictMode, Component, ErrorInfo, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { registerBackgroundSyncWorker, requestAllBackgroundAndSyncPermissions, initBackgroundSync, enableForegroundService, isKeepAliveModeEnabled, setFieldKeepAliveMode } from './lib/offlineQueue';
+import { registerBackgroundSyncWorker, requestAllBackgroundAndSyncPermissions, initBackgroundSync, enableForegroundService, isKeepAliveModeEnabled, setFieldKeepAliveMode } from './lib/offlineQueue.ts';
 
 // Register background sync service worker and initialize background listeners safely
 try {
