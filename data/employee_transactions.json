@@ -1,0 +1,12 @@
+[
+  {
+    "id": "emptx_1789748127345_1iw3r",
+    "employeeId": "emp_1789748111994_n6iaa",
+    "fundId": "fund_1787350448071_bdhbq",
+    "type": "loan",
+    "amount": 1000,
+    "notes": "",
+    "repName": "ضياء المحاسب",
+    "createdAt": "2026-09-18T16:15:27.345Z"
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "pay_16dfd5a9-3e42-4f74-b429-fe2bd5992471",
+    "name": "ضياء المحاسب",
+    "phone": "",
+    "jobTitle": "",
+    "position": "",
+    "salary": 0,
+    "debtBalance": 0,
+    "totalDebt": 0,
+    "isRep": false,
+    "repId": null,
+    "createdAt": "2026-09-20T19:59:19.435Z"
+  }
+]
