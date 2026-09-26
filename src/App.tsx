@@ -80,7 +80,7 @@ import { ServerQueriesModal } from './components/ServerQueriesModal';
 import { silentAutoPrintReceipt, directPrintReceipt, openThermalPrintWindow, printOrQueueInvoice, processPrintQueue, getSavedPrinterConfig, ThermalReceiptData, Platform } from './lib/bluetoothPrinter';
 import { App as CapApp } from '@capacitor/app';
 import { Network } from '@capacitor/network';
-import { initBackgroundSync, registerBackgroundSyncWorker, sendBeaconOnExit, runBackgroundExitSync, enableForegroundService, syncToNativeAndroid, requestAllBackgroundAndSyncPermissions } from './lib/offlineQueue.ts';
+import { initBackgroundSync, registerBackgroundSyncWorker, sendBeaconOnExit, runBackgroundExitSync, enableForegroundService, syncToNativeAndroid, requestAllBackgroundAndSyncPermissions } from './lib/offlineQueue';
 import {
   subscribeToContracts,
   subscribeToCustomers,
@@ -150,7 +150,7 @@ import {
 } from './lib/postgresClient';
 
 import { universalApiFetch } from './lib/apiConfig';
-import { subscribeToQueueChange, getPendingQueue, getPendingQueueSync, flushPendingQueue, scheduleIdleVerification } from './lib/offlineQueue.ts';
+import { subscribeToQueueChange, getPendingQueue, getPendingQueueSync, flushPendingQueue, scheduleIdleVerification } from './lib/offlineQueue';
 import { hasDuplicateName, deduplicateEntitiesByName, normalizeEntityName } from './lib/nameHelpers';
 
 const LANG_STORAGE_KEY = 'sami_installments_lang';

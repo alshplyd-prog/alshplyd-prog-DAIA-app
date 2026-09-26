@@ -22,7 +22,7 @@ export {
   addToPendingQueue,
   flushPendingQueue,
   getPendingQueue,
-} from '../lib/offlineQueue.ts';
+} from '../lib/offlineQueue';
 export * from '../lib/offlineSyncQueue';
 
 // 4. Core Business Data Functions (Hostinger PostgreSQL bridge)

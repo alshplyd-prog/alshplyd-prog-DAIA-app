@@ -1,5 +1,5 @@
 // PostgreSQL client wrapper (With bulletproof offline cache & persistence for APK)
-import { addToPendingQueue, removeFromPendingQueue, flushPendingQueue, getPendingQueueSync, onSyncSuccess, clearPendingQueue, clearPendingActionsByFilter, scheduleIdleVerification } from './offlineQueue.ts';
+import { addToPendingQueue, removeFromPendingQueue, flushPendingQueue, getPendingQueueSync, onSyncSuccess, clearPendingQueue, clearPendingActionsByFilter, scheduleIdleVerification } from './offlineQueue';
 import { getFullApiUrl, fetchWithFallback } from './apiConfig';
 import {
   DEFAULT_REPS,
