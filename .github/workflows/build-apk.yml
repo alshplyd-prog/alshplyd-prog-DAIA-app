@@ -37,24 +37,20 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
       - name: Sync Capacitor Android Project
         run: |
           npx cap sync android
 
-      - name: Prepare Gradle Wrapper
-        run: |
-          cd android
-          chmod +x gradlew
-          if [ ! -f gradle/wrapper/gradle-wrapper.jar ] || ! file gradle/wrapper/gradle-wrapper.jar | grep -q "Zip archive data"; then
-            echo "Restoring clean gradle-wrapper.jar..."
-            mkdir -p gradle/wrapper
-            curl -sSL "https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar
-          fi
-
       - name: Build Android APK (Debug)
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace --no-daemon
+          gradle wrapper --gradle-version 8.11.1
+          gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
