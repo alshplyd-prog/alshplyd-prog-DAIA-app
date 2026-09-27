@@ -44,7 +44,86 @@ var DATA_DIR = import_path.default.resolve(process.cwd(), "data");
 if (!import_fs.default.existsSync(DATA_DIR)) {
   import_fs.default.mkdirSync(DATA_DIR, { recursive: true });
 }
+function resolveFileName(table) {
+  const normalized = table.toLowerCase().trim();
+  if (normalized === "funds") return "cash_funds.json";
+  if (normalized === "inventory") return "inventory_items.json";
+  if (normalized.endsWith(".json")) return normalized;
+  return `${normalized}.json`;
+}
+var memoryCache = {};
+function loadTable(table) {
+  const fileName = resolveFileName(table);
+  const filePath = import_path.default.join(DATA_DIR, fileName);
+  if (memoryCache[fileName]) {
+    return memoryCache[fileName];
+  }
+  try {
+    if (import_fs.default.existsSync(filePath)) {
+      const content = import_fs.default.readFileSync(filePath, "utf-8");
+      const parsed = JSON.parse(content);
+      const items = Array.isArray(parsed) ? parsed : [];
+      memoryCache[fileName] = items;
+      return items;
+    }
+  } catch (err) {
+    console.error(`Error reading ${filePath}:`, err);
+  }
+  memoryCache[fileName] = [];
+  return memoryCache[fileName];
+}
+function saveTable(table, items) {
+  const fileName = resolveFileName(table);
+  const filePath = import_path.default.join(DATA_DIR, fileName);
+  memoryCache[fileName] = items;
+  try {
+    import_fs.default.writeFileSync(filePath, JSON.stringify(items, null, 2), "utf-8");
+  } catch (err) {
+    console.error(`Error writing ${filePath}:`, err);
+  }
+}
 var fileDb = {
+  get(table) {
+    return loadTable(table) || [];
+  },
+  setAll(table, items) {
+    const list = Array.isArray(items) ? [...items] : [];
+    saveTable(table, list);
+  },
+  upsert(table, item) {
+    const list = [...this.get(table)];
+    const id = item.id;
+    const index = id !== void 0 ? list.findIndex((x) => String(x.id) === String(id)) : -1;
+    if (index >= 0) {
+      list[index] = { ...list[index], ...item };
+      saveTable(table, list);
+      return list[index];
+    } else {
+      list.push(item);
+      saveTable(table, list);
+      return item;
+    }
+  },
+  update(table, id, updates) {
+    const list = [...this.get(table)];
+    const index = list.findIndex((x) => String(x.id) === String(id));
+    if (index >= 0) {
+      const updated = { ...list[index], ...updates };
+      list[index] = updated;
+      saveTable(table, list);
+      return updated;
+    }
+    return null;
+  },
+  delete(table, id) {
+    const list = this.get(table);
+    const filtered = list.filter((x) => String(x.id) !== String(id));
+    if (filtered.length !== list.length) {
+      saveTable(table, filtered);
+      return true;
+    }
+    return false;
+  },
   readJson(filename, defaultValue) {
     const filePath = import_path.default.join(DATA_DIR, filename.endsWith(".json") ? filename : `${filename}.json`);
     try {
