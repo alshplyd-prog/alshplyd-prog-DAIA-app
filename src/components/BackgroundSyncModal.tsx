@@ -35,7 +35,7 @@ import {
   flushPendingQueue,
   subscribeToQueueChange,
   clearPendingQueue,
-} from '../lib/offlineQueue.ts';
+} from '../lib/offlineQueue';
 
 interface BackgroundSyncModalProps {
   isOpen: boolean;

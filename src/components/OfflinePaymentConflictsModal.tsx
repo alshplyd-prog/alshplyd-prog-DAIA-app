@@ -16,7 +16,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { PaymentConflictRecord, InstallmentContract, SalesRepresentative, Language } from '../types';
-import { getPendingQueue, subscribeToQueueChange, flushPendingQueue, removeFromPendingQueue, clearPendingQueue } from '../lib/offlineQueue.ts';
+import { getPendingQueue, subscribeToQueueChange, flushPendingQueue, removeFromPendingQueue, clearPendingQueue } from '../lib/offlineQueue';
 
 interface OfflinePaymentConflictsModalProps {
   isOpen: boolean;

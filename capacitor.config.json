@@ -1,0 +1,9 @@
+{
+  "appId": "com.alkarrar.mobile",
+  "appName": "الكرار للموبايل",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
