@@ -1,0 +1,13 @@
+# Treat binary files properly
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.so binary
+*.aar binary
+
+# Unix line endings for shell scripts and gradlew
+*.sh text eol=lf
+gradlew text eol=lf

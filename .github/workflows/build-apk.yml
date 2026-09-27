@@ -41,10 +41,15 @@ jobs:
         run: |
           npx cap sync android
 
-      - name: Make Gradle Executable
+      - name: Prepare Gradle Wrapper
         run: |
           cd android
           chmod +x gradlew
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ] || ! file gradle/wrapper/gradle-wrapper.jar | grep -q "Zip archive data"; then
+            echo "Restoring clean gradle-wrapper.jar..."
+            mkdir -p gradle/wrapper
+            curl -sSL "https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar
+          fi
 
       - name: Build Android APK (Debug)
         run: |
