@@ -1,0 +1,53 @@
+         table_arabic_name         | total_rows 
+-----------------------------------+------------
+ deleted_records                   |       1117
+ fund_transactions                 |        588
+ schema_migrations                 |         82
+ schema_migrations                 |         77
+ migrations                        |         68
+ الزبائن (Customers)               |         15
+ التسديدات (Payments)              |         13
+ الصناديق النقدية (Cash Funds)     |         12
+ المندوبين (Reps)                  |         10
+ customer_lists                    |          9
+ employee_transactions             |          9
+ المواد المخزنية (Inventory Items) |          3
+ system_settings                   |          2
+ المبيعات / العقود (Sales)         |          2
+ الموظفين (Employees)              |          1
+ saml_providers                    |          0
+ flow_state                        |          0
+ saml_relay_states                 |          0
+ oauth_consents                    |          0
+ webauthn_credentials              |          0
+ buckets_vectors                   |          0
+ rep_locations                     |          0
+ vector_indexes                    |          0
+ subscription                      |          0
+ rep_location_logs                 |          0
+ s3_multipart_uploads_parts        |          0
+ payment_conflicts                 |          0
+ buckets                           |          0
+ one_time_tokens                   |          0
+ mfa_factors                       |          0
+ oauth_authorizations              |          0
+ oauth_client_states               |          0
+ mfa_challenges                    |          0
+ instances                         |          0
+ webauthn_challenges               |          0
+ refresh_tokens                    |          0
+ identities                        |          0
+ buckets_analytics                 |          0
+ objects                           |          0
+ sessions                          |          0
+ sso_domains                       |          0
+ s3_multipart_uploads              |          0
+ sso_providers                     |          0
+ oauth_clients                     |          0
+ users                             |          0
+ messages                          |          0
+ custom_oauth_providers            |          0
+ audit_log_entries                 |          0
+ mfa_amr_claims                    |          0
+(49 rows)
+
